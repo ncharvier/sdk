@@ -20,7 +20,9 @@ class FacebookProvider
             "firstName" => $user['first_name'],
             "lastName" => $user['last_name'],
         ])();
+        echo "<pre>";
         var_dump($unifiedUser);
+        echo "</pre>";
     }
 
     private static function getToken($baseUrl, $clientId, $clientSecret)

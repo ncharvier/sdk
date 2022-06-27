@@ -17,8 +17,6 @@ class GithubProvider
             "lastName" => $user['last_name'],
         ])();
         echo "<pre>";
-        var_dump($user);
-        echo "<br/>";
         var_dump($unifiedUser);
         echo "</pre>";
     }
@@ -60,8 +58,6 @@ class GithubProvider
         ]);
 
         $response = file_get_contents("https://api.github.com/user", false, $context);
-
-        var_dump($response);
 
         if (!$response) {
             echo $http_response_header;
