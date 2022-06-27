@@ -8,7 +8,7 @@ function login()
 {
     $queryParams = http_build_query([
         "state"=>bin2hex(random_bytes(16)),
-        "client_id"=> CLIENT_ID,
+        "client_id"=> OauthServerProvider::$clientId,
         "scope"=>"profile",
         "response_type"=>"code",
         "redirect_uri"=>"http://localhost:8081/oauth_success",
@@ -22,7 +22,7 @@ function login()
     ";
     $fbQueryParams = http_build_query([
         "state"=>bin2hex(random_bytes(16)),
-        "client_id"=> FB_CLIENT_ID,
+        "client_id"=> FacebookProvider::$clientId,
         "scope"=>"public_profile,email",
         "redirect_uri"=>"https://localhost/fb_oauth_success",
     ]);

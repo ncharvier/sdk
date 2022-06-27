@@ -2,6 +2,9 @@
 
 class OauthServerProvider
 {
+    public static string $clientId = '67dc2be521bec2ff862d3ab057de216b';
+    private static string $clientSecret = '04054cf433eeb3976252c81b6d657fda';
+
 // get token from code then get user info
     public static function callback()
     {
@@ -23,8 +26,8 @@ class OauthServerProvider
             $specifParams,
             [
                 "redirect_uri" => "http://localhost:8081/oauth_success",
-                "client_id" => CLIENT_ID,
-                "client_secret" => CLIENT_SECRET,
+                "client_id" => OauthServerProvider::$clientId,
+                "client_secret" => OauthServerProvider::$clientSecret,
             ]
         ));
         $response = file_get_contents("http://server:8080/token?{$queryParams}");
