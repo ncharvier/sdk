@@ -3,9 +3,6 @@
 require "Providers/OauthServerProvider.php";
 require "Providers/FacebookProvider.php";
 
-define("FB_CLIENT_ID", '673068700397624');
-define("FB_CLIENT_SECRET", '613d2a9c61783d2b6ebb6ff86fec960e');
-
 // Create a login page with a link to oauth
 function login()
 {
