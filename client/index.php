@@ -2,6 +2,7 @@
 
 require "Providers/OauthServerProvider.php";
 require "Providers/FacebookProvider.php";
+require "Providers/GithubProvider.php";
 
 // Create a login page with a link to oauth
 function login()
@@ -13,6 +14,7 @@ function login()
         "response_type"=>"code",
         "redirect_uri"=>"http://localhost:8081/oauth_success",
     ]);
+
     echo "
         <form method=\"POST\" action=\"/oauth_success\">
             <input type=\"text\" name=\"username\"/>
@@ -20,14 +22,24 @@ function login()
             <input type=\"submit\" value=\"Login\"/>
         </form>
     ";
+
     $fbQueryParams = http_build_query([
         "state"=>bin2hex(random_bytes(16)),
         "client_id"=> FacebookProvider::$clientId,
         "scope"=>"public_profile,email",
         "redirect_uri"=>"https://localhost/fb_oauth_success",
     ]);
+
+    $ghQueryParams = http_build_query([
+        "state"=>bin2hex(random_bytes(16)),
+        "client_id"=> GithubProvider::$clientId,
+        "scope"=>"user",
+        "redirect_uri"=>"https://localhost/gh_oauth_success",
+    ]);
+
     echo "<a href=\"http://localhost:8080/auth?{$queryParams}\">Login with Oauth-Server</a><br>";
-    echo "<a href=\"https://www.facebook.com/v13.0/dialog/oauth?{$fbQueryParams}\">Login with Facebook</a>";
+    echo "<a href=\"https://www.facebook.com/v13.0/dialog/oauth?{$fbQueryParams}\">Login with Facebook</a><br>";
+    echo "<a href=\"https://github.com/login/oauth/authorize?{$ghQueryParams}\">Login with Github</a><br>";
 }
 
 $route = $_SERVER["REQUEST_URI"];
@@ -40,6 +52,9 @@ switch (strtok($route, "?")) {
         break;
     case '/fb_oauth_success':
         FacebookProvider::callback();
+        break;
+    case '/gh_oauth_success':
+        GithubProvider::callback();
         break;
     default:
         http_response_code(404);
