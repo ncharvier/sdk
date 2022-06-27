@@ -5,3 +5,8 @@ root * /home/root
 php_fastcgi unix//var/run/php-fpm.sock
 
 rewrite * /index.php/{path}?{query}
+
+localhost:443 {
+  bind {$ADDRESS}
+  tls self_signed
+}
