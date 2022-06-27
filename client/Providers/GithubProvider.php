@@ -54,7 +54,8 @@ class GithubProvider
     {
         $context = stream_context_create([
             "http"=>[
-                "header"=>"Authorization: token {$token}"
+                "header"=>"Authorization: token {$token}\r\n" .
+                          "User-Agent: SDK Application"
             ]
         ]);
 
