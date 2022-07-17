@@ -3,6 +3,7 @@
 require "Providers/OauthServerProvider.php";
 require "Providers/FacebookProvider.php";
 require "Providers/GithubProvider.php";
+require "Providers/GoogleProvider.php";
 
 // Create a login page with a link to oauth
 function login()
@@ -38,10 +39,18 @@ function login()
         "redirect_uri"=>"https://localhost/gh_oauth_success",
     ]);
 
+    $goQueryParams = http_build_query([
+        "state"=>bin2hex(random_bytes(16)),
+        "client_id"=> GoogleProvider::$clientId,
+        "scope"=>"profile",
+        "redirect_uri"=>"https://localhost/go_oauth_success",
+        "response_type"=>"code",
+    ]);
+
     echo "<a class='btn btn-sm btn-primary mb-2' href=\"http://localhost:8080/auth?{$queryParams}\">Login with Oauth-Server</a><br>";
     echo "<a class='btn btn-sm btn-primary mb-2' href=\"https://www.facebook.com/v13.0/dialog/oauth?{$fbQueryParams}\">Login with Facebook</a><br>";
     echo "<a class='btn btn-sm btn-primary mb-2' href=\"https://github.com/login/oauth/authorize?{$ghQueryParams}\">Login with Github</a><br>";
-
+    echo "<a class='btn btn-sm btn-primary mb-2' href=\"https://accounts.google.com/o/oauth2/auth?{$goQueryParams}\">Login with Google</a><br>";
     echo "</div>";
 }
 ?>
@@ -71,6 +80,9 @@ function login()
                 break;
             case '/gh_oauth_success':
                 GithubProvider::callback();
+                break;
+            case '/go_oauth_success':
+                GoogleProvider::callback();
                 break;
             default:
                 http_response_code(404);

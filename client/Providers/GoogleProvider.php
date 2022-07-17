@@ -1,24 +1,16 @@
 <?php
 
-class FacebookProvider
+class GoogleProvider
 {
-    public static string $clientId = '673068700397624';
-    private static string $clientSecret = '613d2a9c61783d2b6ebb6ff86fec960e';
+    public static string $clientId = '826051565991-k2v9lljmae2ghal7ui93jibmffhkker5.apps.googleusercontent.com';
+    private static string $clientSecret = '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';
 
-// Facebook oauth: exchange code with token then get user info
     public static function callback()
     {
-        $token = FacebookProvider::getToken("https://graph.facebook.com/v13.0/oauth/access_token", FacebookProvider::$clientId, FacebookProvider::$clientSecret);
-        $user = FacebookProvider::getUser($token);
-        $unifiedUser = (fn () => [
-            "id" => $user["id"],
-            "name" => $user["name"],
-            "email" => $user["email"],
-            "firstName" => $user['first_name'],
-            "lastName" => $user['last_name'],
-        ])();
+        $token = GoogleProvider::getToken("https://oauth2.googleapis.com/token", GoogleProvider::$clientId, GoogleProvider::$clientSecret);
+        $user = GoogleProvider::getUser($token);
         echo "<pre>";
-        var_dump($unifiedUser);
+        var_dump($user);
         echo "</pre>";
     }
 
@@ -28,13 +20,21 @@ class FacebookProvider
         $queryParams = http_build_query([
             "client_id"=> $clientId,
             "client_secret"=> $clientSecret,
-            "redirect_uri"=>"https://localhost/fb_oauth_success",
+            "redirect_uri"=>"https://localhost/go_oauth_success",
             "code"=> $code,
             "grant_type"=>"authorization_code",
         ]);
 
+        $context = stream_context_create([
+            "http"=>[
+                "method"=>"POST",
+                "header"=>"Accept: application/x-www-form-urlencoded",
+                "content"=>$queryParams,
+            ]
+        ]);
+
         $url = $baseUrl . "?{$queryParams}";
-        $response = file_get_contents($url);
+        $response = file_get_contents($url, false, $context);
         if (!$response) {
             echo $http_response_header;
             return;
@@ -51,7 +51,9 @@ class FacebookProvider
                 "header"=>"Authorization: Bearer {$token}"
             ]
         ]);
-        $response = file_get_contents("https://graph.facebook.com/v13.0/me?fields=last_name,first_name,email", false, $context);
+
+        $response = file_get_contents("https://people.googleapis.com/v1/people/me?personFields=names,emailAddresses", false, $context);
+
         if (!$response) {
             echo $http_response_header;
             return;
