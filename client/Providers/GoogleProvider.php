@@ -2,6 +2,7 @@
 
 class GoogleProvider
 {
+    // Useless comment to have signed commit :/
     public static string $clientId = '826051565991-k2v9lljmae2ghal7ui93jibmffhkker5.apps.googleusercontent.com';
     private static string $clientSecret = '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';
 
